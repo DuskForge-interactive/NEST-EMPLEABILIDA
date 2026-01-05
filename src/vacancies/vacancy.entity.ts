@@ -61,11 +61,14 @@ export class Vacancy {
   @Column({ type: 'text' })
   company: string;
 
-  @Column({ name: 'max_applicants', type: 'int' })
-  maxApplicants: number;
-
   @Column({ name: 'applicants_count', type: 'int', default: 0 })
   applicantsCount: number;
+
+  @Column({ name: 'max_applicants', type: 'int', default: 1 })
+  maxApplicants: number;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 
   @OneToMany(() => Application, (application) => application.vacancy)
   applications: Application[];

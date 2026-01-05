@@ -1,55 +1,41 @@
 import {
-  IsArray,
   ArrayNotEmpty,
-  IsIn,
+  IsArray,
   IsInt,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Min,
-  MinLength,
 } from 'class-validator';
 
-const LOCATIONS = ['Medellín', 'Barranquilla', 'Bogotá', 'Cartagena'] as const;
-
 export class CreateVacancyDto {
-  @IsString()
-  @MinLength(3)
+  @IsString() @IsNotEmpty()
   title: string;
 
-  @IsString()
-  @MinLength(10)
+  @IsString() @IsNotEmpty()
   description: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsString({ each: true })
+  @IsArray() @ArrayNotEmpty() @IsString({ each: true })
   technologies: string[];
 
-  @IsInt()
-  @Min(1)
-  seniority: number;
+  @IsString() @IsNotEmpty()
+  seniority: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsString({ each: true })
-  softSkills: string[];
+  @IsArray() @IsOptional() @IsString({ each: true })
+  softSkills?: string[];
 
-  @IsIn(LOCATIONS as unknown as string[])
-  location: (typeof LOCATIONS)[number];
+  @IsString() @IsNotEmpty()
+  location: string;
 
-  @IsString()
-  @MinLength(3)
+  @IsString() @IsNotEmpty()
   mode: string;
 
-  @IsOptional()
-  @IsString()
+  @IsOptional() @IsString()
   salaryRange?: string;
 
-  @IsString()
-  @MinLength(2)
+  @IsString() @IsNotEmpty()
   company: string;
 
-  @IsInt()
-  @Min(1)
+  @IsInt() @Min(1)
   maxApplicants: number;
 }

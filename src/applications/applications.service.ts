@@ -56,4 +56,15 @@ export class ApplicationsService {
       order: { createdAt: 'DESC' },
     });
   }
+
+  async vacancyApplications(vacancyId: string) {
+    const vacancyExists = await this.dataSource.getRepository(Vacancy).findOne({ where: { id: vacancyId } });
+    if (!vacancyExists) throw new NotFoundException('Vacancy not found');
+
+    return this.dataSource.getRepository(Application).find({
+      where: { vacancy: { id: vacancyId } as any },
+      relations: { coder: true },
+      order: { createdAt: 'DESC' },
+    });
+  }
 }

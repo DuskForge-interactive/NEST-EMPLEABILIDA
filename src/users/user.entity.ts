@@ -10,7 +10,7 @@ import { Application } from '../applications/application.entity';
 
 export enum UserRole {
   CODER = 'CODER',
-  EMPLOYABILITY = 'EMPLOYABILITY',
+  MANAGER = 'MANAGER',
   ADMIN = 'ADMIN',
 }
 
