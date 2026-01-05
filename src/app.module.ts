@@ -1,37 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './users/user.module';
-import { UserEntity } from './users/user.entity';
-import { VacanciesModule } from './vacancies/vacancies.module';
+import { typeOrmConfig } from './config/typeorm.config';
 
-TypeOrmModule.forFeature([UserEntity])
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { VacanciesModule } from './vacancies/vacancies.module';
+import { ApplicationsModule } from './applications/applications.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        url: config.get<string>('DATABASE_URL'),
-        schema: config.get<string>('DB_SCHEMA') ?? 'public',
-        ssl: {
-          rejectUnauthorized: false,
-        },
-        autoLoadEntities: true,
-        synchronize: false,
-        logging: true,
-      }),
-    }),
-
-    UserModule,
-
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(typeOrmConfig()),
+    UsersModule,
+    AuthModule,
     VacanciesModule,
+    ApplicationsModule,
   ],
 })
 export class AppModule {}

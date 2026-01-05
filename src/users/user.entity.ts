@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Application } from '../applications/application.entity';
 
 export enum UserRole {
   CODER = 'CODER',
@@ -6,25 +14,29 @@ export enum UserRole {
   ADMIN = 'ADMIN',
 }
 
-@Entity({ schema: 'empleabilidad', name: 'users' })
-export class UserEntity {
+@Entity('users')
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ length: 150 })
   name: string;
 
-  @Column({ type: 'text', unique: true })
+  @Column({ unique: true })
   email: string;
 
   @Column({ type: 'text' })
-  password: string;
+  passwordHash: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    enumName: 'empleabilidad.user_role',
-    default: UserRole.CODER,
-  })
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.CODER })
   role: UserRole;
+
+  @OneToMany(() => Application, (application) => application.coder)
+  applications: Application[];
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
 }

@@ -1,12 +1,14 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Application } from '../applications/application.entity';
 
-@Entity({ name: 'vacancies', schema: 'empleabilidad' })
+@Entity('vacancies')
 export class Vacancy {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,7 +26,7 @@ export class Vacancy {
       from: (value: string) =>
         String(value ?? '')
           .split(',')
-          .map((s) => s.trim())
+          .map((item) => item.trim())
           .filter(Boolean),
     },
   })
@@ -41,7 +43,7 @@ export class Vacancy {
       from: (value: string) =>
         String(value ?? '')
           .split(',')
-          .map((s) => s.trim())
+          .map((item) => item.trim())
           .filter(Boolean),
     },
   })
@@ -61,6 +63,12 @@ export class Vacancy {
 
   @Column({ name: 'max_applicants', type: 'int' })
   maxApplicants: number;
+
+  @Column({ name: 'applicants_count', type: 'int', default: 0 })
+  applicantsCount: number;
+
+  @OneToMany(() => Application, (application) => application.vacancy)
+  applications: Application[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
