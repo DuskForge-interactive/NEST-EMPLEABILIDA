@@ -7,12 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../applications/application.entity';
-
-export enum UserRole {
-  CODER = 'CODER',
-  MANAGER = 'MANAGER',
-  ADMIN = 'ADMIN',
-}
+import { Role } from '../common/enums';
 
 @Entity('users')
 export class User {
@@ -28,8 +23,8 @@ export class User {
   @Column({ type: 'text' })
   passwordHash: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.CODER })
-  role: UserRole;
+  @Column({ type: 'enum', enum: Role, enumName: 'users_role_enum', default: Role.CODER })
+  role: Role;
 
   @OneToMany(() => Application, (application) => application.coder)
   applications: Application[];

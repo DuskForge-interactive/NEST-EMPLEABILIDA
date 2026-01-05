@@ -21,6 +21,7 @@ export class Vacancy {
 
   @Column({
     type: 'text',
+    default: '',
     transformer: {
       to: (value: string[]) => (Array.isArray(value) ? value.join(',') : String(value ?? '')),
       from: (value: string) =>
@@ -38,6 +39,7 @@ export class Vacancy {
   @Column({
     name: 'soft_skills',
     type: 'text',
+    default: '',
     transformer: {
       to: (value: string[]) => (Array.isArray(value) ? value.join(',') : String(value ?? '')),
       from: (value: string) =>

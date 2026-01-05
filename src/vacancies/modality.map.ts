@@ -10,7 +10,7 @@ export const MODALITY_MAP: Record<string, string> = {
   hibrida: 'HYBRID',
   hybrid: 'HYBRID',
 
-  presencial: 'ON_SITE',
-  onsite: 'ON_SITE',
-  'on-site': 'ON_SITE',
+  presencial: 'ONSITE',
+  onsite: 'ONSITE',
+  'on-site': 'ONSITE',
 };

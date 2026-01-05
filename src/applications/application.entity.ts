@@ -1,19 +1,33 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, Unique } from 'typeorm';
-import { User } from '../users/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Vacancy } from '../vacancies/vacancy.entity';
+import { User } from '../users/user.entity';
 
 @Entity('applications')
-@Unique('UQ_coder_vacancy', ['coder', 'vacancy'])
 export class Application {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (u) => u.applications, { onDelete: 'CASCADE' })
+  @Column({ name: 'coderId', type: 'uuid', nullable: true })
+  coderId: string | null;
+
+  @Column({ name: 'vacancyId', type: 'uuid', nullable: true })
+  vacancyId: string | null;
+
+  @ManyToOne(() => User, (user) => user.applications, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'coderId' })
   coder: User;
 
-  @ManyToOne(() => Vacancy, (v) => v.applications, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Vacancy, (vacancy) => vacancy.applications, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'vacancyId' })
   vacancy: Vacancy;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'createdAt', type: 'timestamp' })
   createdAt: Date;
 }

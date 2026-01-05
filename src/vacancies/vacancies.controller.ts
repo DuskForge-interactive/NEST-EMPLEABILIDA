@@ -1,9 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { VacanciesService } from './vacancies.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
-import { UserRole } from '../users/user.entity';
+import { Role } from '../common/enums';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 
@@ -11,8 +10,8 @@ import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 export class VacanciesController {
   constructor(private readonly vacancies: VacanciesService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.MANAGER)
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.GESTOR)
   @Post()
   create(@Body() dto: CreateVacancyDto) {
     return this.vacancies.create(dto);
@@ -28,15 +27,15 @@ export class VacanciesController {
     return this.vacancies.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.MANAGER)
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.GESTOR)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateVacancyDto) {
     return this.vacancies.update(id, dto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.MANAGER)
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.GESTOR)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.vacancies.remove(id);

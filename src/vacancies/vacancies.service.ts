@@ -26,7 +26,7 @@ export class VacanciesService {
       description: dto.description,
       technologies: dto.technologies,
       seniority: String(dto.seniority),
-      softSkills: dto.softSkills,
+      softSkills: dto.softSkills ?? [],
       location: dto.location,
       mode: dbMode,
       salaryRange: dto.salaryRange,
