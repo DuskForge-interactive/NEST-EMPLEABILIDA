@@ -7,8 +7,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { VacanciesModule } from './vacancies/vacancies.module';
 import { ApplicationsModule } from './applications/applications.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './common/guards/roles.guard';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -19,6 +19,6 @@ import { RolesGuard } from './common/guards/roles.guard';
     VacanciesModule,
     ApplicationsModule,
   ],
-  providers: [{ provide: APP_GUARD, useClass: RolesGuard }],
+  providers: [{ provide: APP_INTERCEPTOR, useClass: ResponseInterceptor }],
 })
 export class AppModule {}

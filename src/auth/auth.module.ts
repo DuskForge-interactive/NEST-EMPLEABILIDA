@@ -5,23 +5,31 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import type { SignOptions } from 'jsonwebtoken';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-const expiresInValue = process.env.JWT_EXPIRES_IN;
-const expiresIn: SignOptions['expiresIn'] = (() => {
-  if (!expiresInValue) return '1d';
-  const numeric = Number(expiresInValue);
+function parseExpiresIn(value?: string | null): SignOptions['expiresIn'] {
+  if (!value) return '1d';
+  const numeric = Number(value);
   if (Number.isNaN(numeric)) {
-    return expiresInValue as SignOptions['expiresIn'];
+    return value as SignOptions['expiresIn'];
   }
   return numeric as SignOptions['expiresIn'];
-})();
+}
 
 @Module({
   imports: [
+    ConfigModule,
     UsersModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const secret = config.get<string>('JWT_SECRET') || 'super-secret';
+        return {
+          secret,
+          signOptions: { expiresIn: parseExpiresIn(config.get('JWT_EXPIRES_IN')) },
+        };
+      },
     }),
   ],
   providers: [AuthService, JwtStrategy],

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { Role } from '../common/enums';
+import { UserRole } from '../common/enums';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +13,7 @@ export class UsersService {
   }
 
   createCoder(data: Pick<User, 'name' | 'email' | 'passwordHash'>) {
-    const user = this.repo.create({ ...data, role: Role.CODER });
+    const user = this.repo.create({ ...data, role: UserRole.CODER });
     return this.repo.save(user);
   }
 

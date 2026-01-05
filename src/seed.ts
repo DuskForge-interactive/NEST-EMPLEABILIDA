@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './users/user.entity';
 import { Vacancy } from './vacancies/vacancy.entity';
 import { Application } from './applications/application.entity';
-import { Location, Mode, Role } from './common/enums';
+import { Location, Mode, UserRole } from './common/enums';
 
 type UserSeed = Pick<User, 'name' | 'email' | 'passwordHash' | 'role'>;
 type VacancySeed = Pick<
@@ -84,21 +84,21 @@ async function bootstrap() {
       name: 'Gestor Empleabilidad',
       email: 'gestor@empleabilidad.com',
       passwordHash,
-      role: Role.GESTOR,
+      role: UserRole.MANAGER,
     });
 
     const coderOne = await ensureUser(dataSource, {
       name: 'Coder Uno',
       email: 'coder1@empleabilidad.com',
       passwordHash,
-      role: Role.CODER,
+      role: UserRole.CODER,
     });
 
     const coderTwo = await ensureUser(dataSource, {
       name: 'Coder Dos',
       email: 'coder2@empleabilidad.com',
       passwordHash,
-      role: Role.CODER,
+      role: UserRole.CODER,
     });
 
     const backendVacancy = await ensureVacancy(dataSource, {

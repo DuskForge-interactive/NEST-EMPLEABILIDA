@@ -1,6 +1,6 @@
-export enum Role {
+export enum UserRole {
   CODER = 'CODER',
-  GESTOR = 'GESTOR',
+  MANAGER = 'MANAGER',
 }
 
 export enum Mode {

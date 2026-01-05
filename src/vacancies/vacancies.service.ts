@@ -5,6 +5,7 @@ import { Vacancy } from './vacancy.entity';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { MODALITY_MAP, normalize } from './modality.map';
+import { ListVacanciesDto } from './dto/list-vacancies.dto';
 
 @Injectable()
 export class VacanciesService {
@@ -37,8 +38,36 @@ export class VacanciesService {
     return this.repo.save(vacancy);
   }
 
-  findAll() {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  findAll(filters: ListVacanciesDto = {}) {
+    const qb = this.repo.createQueryBuilder('vacancy').orderBy('vacancy.createdAt', 'DESC');
+
+    if (filters.technology) {
+      const techTerms = filters.technology
+        .split(',')
+        .map((term) => term.trim())
+        .filter(Boolean);
+
+      if (techTerms.length > 0) {
+        const clauses: string[] = [];
+        const params: Record<string, string> = {};
+
+        techTerms.forEach((term, idx) => {
+          const key = `tech${idx}`;
+          clauses.push(`vacancy.technologies ILIKE :${key}`);
+          params[key] = `%${term}%`;
+        });
+
+        qb.andWhere(`(${clauses.join(' OR ')})`, params);
+      }
+    }
+
+    if (filters.seniority) {
+      qb.andWhere('LOWER(vacancy.seniority) = LOWER(:seniority)', {
+        seniority: filters.seniority.trim(),
+      });
+    }
+
+    return qb.getMany();
   }
 
   async findOne(id: string) {

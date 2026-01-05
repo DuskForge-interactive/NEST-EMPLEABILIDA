@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+    container_name: empleabilidad-api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: empleabilidad
+      DB_SCHEMA: empleabilidad
+      DB_SYNCHRONIZE: "true"
+      JWT_SECRET: super-secret-larga-y-fea
+      JWT_EXPIRES_IN: 1d
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: empleabilidad-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: empleabilidad
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:

@@ -67,4 +67,31 @@ export class ApplicationsService {
       order: { createdAt: 'DESC' },
     });
   }
+
+  async metrics() {
+    const rows = await this.dataSource
+      .getRepository(Vacancy)
+      .createQueryBuilder('vacancy')
+      .leftJoin('vacancy.applications', 'application')
+      .select('vacancy.id', 'vacancyId')
+      .addSelect('vacancy.title', 'title')
+      .addSelect('COUNT(application.id)', 'applications')
+      .groupBy('vacancy.id')
+      .addGroupBy('vacancy.title')
+      .orderBy('applications', 'DESC')
+      .getRawMany();
+
+    const byVacancy = rows.map((row) => ({
+      vacancyId: row.vacancyId,
+      title: row.title,
+      applications: Number(row.applications || 0),
+    }));
+
+    const totalApplications = byVacancy.reduce((acc, item) => acc + item.applications, 0);
+
+    return {
+      totalApplications,
+      byVacancy,
+    };
+  }
 }
