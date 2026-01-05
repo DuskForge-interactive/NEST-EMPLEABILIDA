@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './users/user.module';
 import { UserEntity } from './users/user.entity';
+import { VacanciesModule } from './vacancies/vacancies.module';
 
 TypeOrmModule.forFeature([UserEntity])
 
@@ -29,6 +30,8 @@ TypeOrmModule.forFeature([UserEntity])
     }),
 
     UserModule,
+
+    VacanciesModule,
   ],
 })
 export class AppModule {}
